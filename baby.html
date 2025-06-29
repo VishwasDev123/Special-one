@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, My Love!</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Custom CSS for animations */
+body {
+font-family: 'Inter', sans-serif;
+overflow: hidden; /* Prevent scrolling during transitions */
+}
+
+.fade-in {
+animation: fadeIn 1.5s ease-out forwards;
+}
+
+.fade-out-up {
+animation: fadeOutUp 1.0s ease-out forwards;
+}
+
+.scale-in {
+animation: scaleIn 1.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOutUp {
+from { opacity: 1; transform: translateY(0); }
+to { opacity: 0; transform: translateY(-20px); }
+}
+
+@keyframes scaleIn {
+from { opacity: 0; transform: scale(0.8); }
+to { opacity: 1; transform: scale(1); }
+}
+
+.message-slide {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+text-align: center;
+transition: opacity 1s ease-in-out;
+opacity: 0; /* Initially hidden */
+pointer-events: none; /* Allow clicks to pass through */
+}
+
+.message-slide.active {
+opacity: 1;
+pointer-events: auto;
+}
+</style>
+</head>
+<body class="bg-gradient-to-br from-pink-300 to-purple-400 min-h-screen flex items-center justify-center p-4">
+
+<!-- Audio Element -->
+<audio id="birthdaySong" src="https://vishwas8890.github.io/birthday/happy-birthday-357371.mp3" preload="auto"></audio>
+<!-- Replace with your preferred song URL. Make sure it's directly accessible. -->
+
+<!-- Main Container -->
+<div id="app" class="relative w-full max-w-4xl bg-white bg-opacity-80 rounded-3xl shadow-xl overflow-hidden p-8 sm:p-12 md:p-16 flex items-center justify-center min-h-[500px]">
+
+<!-- Initial Welcome Screen -->
+<div id="welcomeScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-pink-200 bg-opacity-90 rounded-3xl p-8 z-10 fade-in">
+<h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-pink-700 mb-6 text-center">A Special Message Just for You!</h1>
+<button id="startButton" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300">
+Click to Begin
+</button>
+</div>
+
+<!-- Birthday Messages and Images -->
+
+<!-- Slide 1: Opening Message -->
+<div id="slide1" class="message-slide text-pink-800">
+<h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-wider fade-in">
+Happy Birthday, <span class="text-purple-600">My Dearest Love!</span> ❤️
+</h2>
+</div>
+
+<!-- Slide 2: Image 1 -->
+<div id="slide2" class="message-slide">
+<img src="https://placehold.co/400x300/F06292/FFFFFF?text=For+My+Girlfriend" alt="A beautiful placeholder image for my girlfriend" class="rounded-xl shadow-lg scale-in max-w-full h-auto">
+</div>
+
+<!-- Slide 3: Personal Message 1 -->
+<div id="slide3" class="message-slide text-purple-800">
+<p class="text-2xl sm:text-3xl md:text-4xl font-semibold leading-relaxed fade-in">
+Every moment with you is a precious gift.
+<br>Thank you for filling my life with so much joy and laughter.
+</p>
+</div>
+
+<!-- Slide 4: Image 2 -->
+<div id="slide4" class="message-slide">
+<img src="https://placehold.co/500x350/9C27B0/FFFFFF?text=Our+Journey" alt="Another beautiful placeholder image" class="rounded-xl shadow-lg scale-in max-w-full h-auto">
+</div>
+
+<!-- Slide 5: Personal Message 2 -->
+<div id="slide5" class="message-slide text-pink-800">
+<p class="text-2xl sm:text-3xl md:text-4xl font-semibold leading-relaxed fade-in">
+May your special day be as
+<span class="text-pink-600 font-extrabold">bright</span> and <span class="text-purple-600 font-extrabold">wonderful</span>
+as you are.
+</p>
+</div>
+
+<!-- Slide 6: Final Message -->
+<div id="slide6" class="message-slide text-purple-900">
+<h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-wider fade-in">
+Wishing you the happiest birthday ever!
+<br>With all my love,
+<br><span class="text-pink-600"> [Your Name Here] ❤️</span>
+</h2>
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+const startButton = document.getElementById('startButton');
+const welcomeScreen = document.getElementById('welcomeScreen');
+const birthdaySong = document.getElementById('birthdaySong');
+const appContainer = document.getElementById('app');
+
+// Array of slide IDs and their display durations
+const slides = [
+{ id: 'slide1', duration: 5000 }, // Message 1
+{ id: 'slide2', duration: 6000 }, // Image 1
+{ id: 'slide3', duration: 7000 }, // Message 2
+{ id: 'slide4', duration: 6000 }, // Image 2
+{ id: 'slide5', duration: 7000 }, // Message 3
+{ id: 'slide6', duration: 8000 } // Final Message
+];
+
+let currentSlideIndex = 0;
+
+/**
+* Plays the birthday song.
+*/
+function playSong() {
+birthdaySong.volume = 0.7; // Set initial volume
+birthdaySong.play().catch(error => {
+console.error("Audio playback failed:", error);
+// Inform the user if autoplay is blocked
+const messageBox = document.createElement('div');
+messageBox.className = 'absolute bottom-4 left-1/2 -translate-x-1/2 bg-red-500 text-white p-3 rounded-lg shadow-md';
+messageBox.textContent = 'Audio playback blocked by browser. Please enable sound.';
+document.body.appendChild(messageBox);
+setTimeout(() => messageBox.remove(), 5000);
+});
+}
+
+/**
+* Shows the next slide in the sequence.
+*/
+function showNextSlide() {
+if (currentSlideIndex > 0) {
+const prevSlide = document.getElementById(slides[currentSlideIndex - 1].id);
+if (prevSlide) {
+prevSlide.classList.remove('active', 'fade-in', 'scale-in');
+prevSlide.classList.add('fade-out-up'); // Add fade-out animation
+// Remove the slide from display after animation
+setTimeout(() => {
+prevSlide.classList.add('hidden');
+prevSlide.classList.remove('fade-out-up');
+}, 1000); // Match fade-out-up duration
+}
+}
+
+if (currentSlideIndex < slides.length) {
+const currentSlideData = slides[currentSlideIndex];
+const currentSlideElement = document.getElementById(currentSlideData.id);
+
+if (currentSlideElement) {
+currentSlideElement.classList.remove('hidden');
+currentSlideElement.classList.add('active'); // Make active for transition
+
+// Apply the specific animation based on content type
+if (currentSlideElement.querySelector('img')) {
+currentSlideElement.querySelector('img').classList.add('scale-in');
+} else {
+currentSlideElement.querySelector('h2, p').classList.add('fade-in');
+}
+
+// Schedule next slide
+setTimeout(() => {
+currentSlideIndex++;
+showNextSlide();
+}, currentSlideData.duration);
+}
+} else {
+// All slides shown, optional: loop or end message
+console.log("All slides shown!");
+// Optionally, fade out the audio or stop it
+// birthdaySong.pause();
+// birthdaySong.currentTime = 0;
+}
+}
+
+/**
+* Handles the start button click.
+*/
+startButton.addEventListener('click', () => {
+welcomeScreen.classList.remove('fade-in');
+welcomeScreen.classList.add('fade-out-up'); // Animate welcome screen out
+
+// After fade-out, hide it completely and start the song and slides
+setTimeout(() => {
+welcomeScreen.classList.add('hidden');
+welcomeScreen.classList.remove('fade-out-up'); // Clean up class
+playSong();
+showNextSlide();
+}, 1000); // Match fade-out-up duration
+});
+});
+</script>
+</body>
+</html>
