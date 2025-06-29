@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday, My Love!</title>
-<!-- Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -60,18 +59,50 @@ pointer-events: none; /* Allow clicks to pass through */
 opacity: 1;
 pointer-events: auto;
 }
+
+/* Quiz specific styles */
+.quiz-option {
+background-color: #fce4ec; /* Light pink */
+border: 2px solid #f8bbd0; /* Slightly darker pink */
+color: #880e4f; /* Dark pink text */
+padding: 1rem 2rem;
+margin: 0.5rem 0;
+border-radius: 9999px; /* Pill shape */
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.quiz-option:hover {
+background-color: #f8bbd0;
+transform: translateY(-2px);
+box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.quiz-option.correct {
+background-color: #a7f3d0; /* Green for correct */
+border-color: #34d399;
+color: #065f46;
+}
+
+.quiz-option.incorrect {
+background-color: #fecaca; /* Red for incorrect */
+border-color: #ef4444;
+color: #991b1b;
+}
+
+.quiz-option.correct:hover,
+.quiz-option.incorrect:hover {
+transform: none; /* No lift on feedback */
+box-shadow: none;
+cursor: default;
+}
 </style>
 </head>
 <body class="bg-gradient-to-br from-pink-300 to-purple-400 min-h-screen flex items-center justify-center p-4">
 
-<!-- Audio Element -->
 <audio id="birthdaySong" src="https://vishwasdev123.github.io/Special-one/happy-birthday-357371.mp3" preload="auto"></audio>
-<!-- Replace with your preferred song URL. Make sure it's directly accessible. -->
-
-<!-- Main Container -->
 <div id="app" class="relative w-full max-w-4xl bg-white bg-opacity-80 rounded-3xl shadow-xl overflow-hidden p-8 sm:p-12 md:p-16 flex items-center justify-center min-h-[500px]">
 
-<!-- Initial Welcome Screen -->
 <div id="welcomeScreen" class="absolute inset-0 flex flex-col items-center justify-center bg-pink-200 bg-opacity-90 rounded-3xl p-8 z-10 fade-in">
 <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-pink-700 mb-6 text-center">A Special Message Just for You!</h1>
 <button id="startButton" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-pink-300">
@@ -79,21 +110,16 @@ Click to Begin
 </button>
 </div>
 
-<!-- Birthday Messages and Images -->
-
-<!-- Slide 1: Opening Message -->
 <div id="slide1" class="message-slide text-pink-800">
 <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-wider fade-in">
 Happy Birthday, <span class="text-purple-600">My Dearest Love!</span> ❤️
 </h2>
 </div>
 
-<!-- Slide 2: Image 1 -->
 <div id="slide2" class="message-slide">
 <img src="https://vishwasdev123.github.io/Special-one/IMG_2723.JPG" alt="A beautiful placeholder image for my girlfriend" class="rounded-xl shadow-lg scale-in max-w-full h-auto">
 </div>
 
-<!-- Slide 3: Personal Message 1 -->
 <div id="slide3" class="message-slide text-purple-800">
 <p class="text-2xl sm:text-3xl md:text-4xl font-semibold leading-relaxed fade-in">
 Every moment with you is a precious gift.
@@ -101,12 +127,10 @@ Every moment with you is a precious gift.
 </p>
 </div>
 
-<!-- Slide 4: Image 2 -->
 <div id="slide4" class="message-slide">
-<img src="https://placehold.co/500x350/9C27B0/FFFFFF?text=Our+Journey" alt="Another beautiful placeholder image" class="rounded-xl shadow-lg scale-in max-w-full h-auto">
+<img src="https://vishwasdev123.github.io/Special-one/Screenshot_20250331_225508.jpg" alt="Another beautiful placeholder image" class="rounded-xl shadow-lg scale-in max-w-full h-auto">
 </div>
 
-<!-- Slide 5: Personal Message 2 -->
 <div id="slide5" class="message-slide text-pink-800">
 <p class="text-2xl sm:text-3xl md:text-4xl font-semibold leading-relaxed fade-in">
 May your special day be as
@@ -115,7 +139,6 @@ as you are.
 </p>
 </div>
 
-<!-- Slide 6: Final Message -->
 <div id="slide6" class="message-slide text-purple-900">
 <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-wider fade-in">
 Wishing you the happiest birthday ever!
@@ -123,6 +146,19 @@ Wishing you the happiest birthday ever!
 <br><span class="text-pink-600"> [Your Name Here] ❤️</span>
 </h2>
 </div>
+
+<div id="slide7" class="message-slide flex-col text-pink-800 p-4">
+<h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-8 fade-in">
+Now, a little quiz just for you!
+</h2>
+<p id="quizQuestion" class="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-purple-700 fade-in">
+What's my favorite thing about you?
+</p>
+<div id="quizOptions" class="flex flex-col gap-4 w-full max-w-md fade-in">
+</div>
+<p id="quizFeedback" class="text-xl sm:text-2xl mt-6 font-bold"></p>
+</div>
+
 
 </div>
 
@@ -133,6 +169,46 @@ const welcomeScreen = document.getElementById('welcomeScreen');
 const birthdaySong = document.getElementById('birthdaySong');
 const appContainer = document.getElementById('app');
 
+// Quiz elements
+const quizQuestionElement = document.getElementById('quizQuestion');
+const quizOptionsElement = document.getElementById('quizOptions');
+const quizFeedbackElement = document.getElementById('quizFeedback');
+
+// Define your quiz questions
+const quizData = [
+{
+question: "What's my favorite thing about you?",
+options: [
+"Your infectious laugh",
+"Your kindness and empathy",
+"Your brilliant mind",
+"Everything, I can't pick just one!"
+],
+correctAnswer: "Everything, I can't pick just one!"
+},
+{
+question: "If we could go anywhere for our next adventure, where would I probably suggest?",
+options: [
+"A cozy cabin in the mountains",
+"A bustling city for exploring",
+"A relaxing beach getaway",
+"Somewhere entirely new and unexpected"
+],
+correctAnswer: "A relaxing beach getaway" // You can change this to match your preference!
+},
+{
+question: "What's a small gesture you do that always makes me smile?",
+options: [
+"Leaving me little notes",
+"Making my favorite coffee",
+"Remembering tiny details about me",
+"Just being you"
+],
+correctAnswer: "Just being you" // Again, feel free to customize!
+}
+];
+let currentQuizQuestionIndex = 0;
+
 // Array of slide IDs and their display durations
 const slides = [
 { id: 'slide1', duration: 5000 }, // Message 1
@@ -140,7 +216,8 @@ const slides = [
 { id: 'slide3', duration: 7000 }, // Message 2
 { id: 'slide4', duration: 6000 }, // Image 2
 { id: 'slide5', duration: 7000 }, // Message 3
-{ id: 'slide6', duration: 8000 } // Final Message
+{ id: 'slide6', duration: 8000 }, // Final Message
+{ id: 'slide7', duration: 15000 } // Quiz slide, longer duration for interaction
 ];
 
 let currentSlideIndex = 0;
@@ -189,15 +266,24 @@ currentSlideElement.classList.add('active'); // Make active for transition
 // Apply the specific animation based on content type
 if (currentSlideElement.querySelector('img')) {
 currentSlideElement.querySelector('img').classList.add('scale-in');
-} else {
+} else if (currentSlideElement.id === 'slide7') { // Special handling for quiz slide
+loadQuizQuestion();
+currentSlideElement.querySelectorAll('.fade-in').forEach(el => el.classList.add('fade-in'));
+}
+else {
 currentSlideElement.querySelector('h2, p').classList.add('fade-in');
 }
 
-// Schedule next slide
+// Schedule next slide only if it's not the quiz slide, or if the quiz has a timed advance
+if (currentSlideElement.id !== 'slide7') {
 setTimeout(() => {
 currentSlideIndex++;
 showNextSlide();
 }, currentSlideData.duration);
+}
+// For the quiz slide, we'll advance based on user interaction or a longer timeout
+// For now, it stays active until user interacts or the longer duration passes.
+// If you want it to automatically advance after the user answers, you'll need to modify the quiz logic.
 }
 } else {
 // All slides shown, optional: loop or end message
@@ -207,6 +293,69 @@ console.log("All slides shown!");
 // birthdaySong.currentTime = 0;
 }
 }
+
+/**
+* Loads the current quiz question and options.
+*/
+function loadQuizQuestion() {
+const currentQuiz = quizData[currentQuizQuestionIndex];
+quizQuestionElement.textContent = currentQuiz.question;
+quizOptionsElement.innerHTML = ''; // Clear previous options
+quizFeedbackElement.textContent = ''; // Clear previous feedback
+
+currentQuiz.options.forEach(option => {
+const optionButton = document.createElement('button');
+optionButton.textContent = option;
+optionButton.classList.add('quiz-option');
+optionButton.addEventListener('click', () => checkAnswer(option, currentQuiz.correctAnswer, optionButton));
+quizOptionsElement.appendChild(optionButton);
+});
+}
+
+/**
+* Checks the selected answer and provides feedback.
+* @param {string} selectedOption - The option selected by the user.
+* @param {string} correctAnswer - The correct answer for the current question.
+* @param {HTMLElement} optionButton - The button element that was clicked.
+*/
+function checkAnswer(selectedOption, correctAnswer, optionButton) {
+// Disable all options after an answer is chosen
+Array.from(quizOptionsElement.children).forEach(button => {
+button.style.pointerEvents = 'none'; // Disable clicks
+});
+
+if (selectedOption === correctAnswer) {
+optionButton.classList.add('correct');
+quizFeedbackElement.textContent = "You got it! ❤️";
+quizFeedbackElement.style.color = '#065f46'; // Dark green
+} else {
+optionButton.classList.add('incorrect');
+quizFeedbackElement.textContent = `Not quite! The answer was "${correctAnswer}".`;
+quizFeedbackElement.style.color = '#991b1b'; // Dark red
+// Highlight the correct answer if incorrect
+Array.from(quizOptionsElement.children).forEach(button => {
+if (button.textContent === correctAnswer) {
+button.classList.add('correct');
+}
+});
+}
+
+// Optionally, advance to the next question or slide after a delay
+setTimeout(() => {
+currentQuizQuestionIndex++;
+if (currentQuizQuestionIndex < quizData.length) {
+loadQuizQuestion(); // Load next question
+} else {
+quizQuestionElement.textContent = "You completed the quiz!";
+quizOptionsElement.innerHTML = '';
+quizFeedbackElement.textContent = "Thanks for playing! 😊";
+quizFeedbackElement.style.color = '#880e4f'; // Reset to a nice pink
+// After quiz is done, you might want to automatically advance to the next "slide" (if any)
+// or just keep this last message visible. For now, it stays.
+}
+}, 3000); // Wait 3 seconds before moving to next question/ending quiz
+}
+
 
 /**
 * Handles the start button click.
