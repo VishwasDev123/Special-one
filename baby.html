@@ -11,6 +11,12 @@
 body {
 font-family: 'Inter', sans-serif;
 overflow: hidden; /* Prevent scrolling during transitions */
+/* Background Image Styles */
+background-image: url('https://vishwasdev123.github.io/Special-one/Birthday-Background.jpg'); /* Replace with your image URL */
+background-size: cover; /* Cover the entire viewport */
+background-position: center; /* Center the image */
+background-repeat: no-repeat; /* Do not repeat the image */
+background-attachment: fixed; /* Keep background fixed while scrolling (though overflow is hidden) */
 }
 
 .fade-in {
@@ -98,8 +104,7 @@ cursor: default;
 }
 </style>
 </head>
-<body class="bg-gradient-to-br from-pink-300 to-purple-400 min-h-screen flex items-center justify-center p-4">
-
+<body class="min-h-screen flex items-center justify-center p-4">
 <audio id="birthdaySong" src="https://vishwasdev123.github.io/Special-one/happy-birthday-357371.mp3" preload="auto"></audio>
 <div id="app" class="relative w-full max-w-4xl bg-white bg-opacity-80 rounded-3xl shadow-xl overflow-hidden p-8 sm:p-12 md:p-16 flex items-center justify-center min-h-[500px]">
 
@@ -336,9 +341,9 @@ currentQuizQuestionIndex++;
 if (currentQuizQuestionIndex < quizData.length) {
 loadQuizQuestion(); // Load next question
 } else {
-quizQuestionElement.textContent = "You completed the quiz!";
+quizQuestionElement.textContent = "You completed the quiz Baby";
 quizOptionsElement.innerHTML = '';
-quizFeedbackElement.textContent = "Thanks for playing! 😊";
+quizFeedbackElement.textContent = "Happy Birthday once again my love ❤️";
 quizFeedbackElement.style.color = '#880e4f'; // Reset to a nice pink
 // After quiz is done, you might want to automatically advance to the next "slide" (if any)
 // or just keep this last message visible. For now, it stays.
